@@ -1,4 +1,4 @@
-import {test} from '@playwright/test'
+import {test, expect} from '@playwright/test'
 
 
 test.beforeEach(async ({page}) => {
@@ -41,3 +41,68 @@ test('Locating child elements',  async ({page})=> {
     await page.locator('nb-card').getByRole('button', {name: "Sign in"}).first().click();
     await page.locator('nb-card').nth(3).getByRole('button').click();
 })
+
+test('Locating the parent elements', async ({page})=> {
+await page.locator('nb-card', {hasText: 'Using the Grid'}).getByRole('button').click();
+await page.locator('nb-card', {has: page.locator('#inputEmail')}).getByRole('button').click();
+await page.locator('nb-card')
+.filter({has:page.locator("nb-checkbox")})
+.filter({hasText: 'Sign in'})
+.getByLabel('Email')
+.fill('thaitheyasudanpk@gmail.com');
+await page.getByText('Using the Grid').locator('..').getByRole('button').click();
+}) 
+
+test('Reusing Locator', async({page})=> {
+const basicFormSection =  page.locator('nb-card', {hasText: 'Basic form'});
+const emailInputField = basicFormSection.getByLabel('Email')
+
+await emailInputField.fill('thaitheyasudanpk@gmail.com')
+await basicFormSection.getByLabel('password').fill('Sudan@2805')
+await basicFormSection.locator('nb-checkbox').click()
+await basicFormSection.getByRole('button').click()
+
+await expect(emailInputField).toHaveValue('thaitheyasudanpk@gmail.com')
+
+})
+
+
+test.only('Extracting Value', async ({page})=> {
+    const basicFormSection =  page.locator('nb-card', {hasText: 'Basic form'});
+    const submitButtonText = await basicFormSection.getByRole('button').textContent();
+    expect(submitButtonText).toEqual('Submit')
+
+    //Extract multiple text values
+    const extractionRadios = await page.locator('nb-radio').allTextContents();
+    expect(extractionRadios).toContain('Option 1')
+
+    const emailInputField = basicFormSection.getByRole('textbox',{name:'Email'})
+    await emailInputField.fill('thaitheyasudanpk@gmail.com')
+
+    const extractValue = await emailInputField.inputValue();
+    console.log(extractValue)
+    //Attribute Value
+    const emailPlaceHolder = await emailInputField.getAttribute('placeholder')
+    console.log(emailPlaceHolder)
+})
+
+test('Assertions', async({page}) => {
+
+    //Generic assertions
+    const value  = 5;
+    expect(value).toEqual(5);
+
+    const basicFormSection =  page.locator('nb-card', {hasText: 'Basic form'}).getByRole('button');
+
+    const submitButtonText = await basicFormSection.textContent();
+    expect(submitButtonText).toEqual('Submit')
+
+    //Locator Assertion
+    await expect(basicFormSection).toHaveText('Submit')
+
+    //Soft Assertion
+    await expect.soft(basicFormSection).toHaveText('Submit ')
+    await basicFormSection.click();
+})
+
+
