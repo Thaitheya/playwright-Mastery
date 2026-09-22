@@ -188,3 +188,93 @@ test('Table 2', async ({ page }) => {
     }
   }
 })
+
+test('Date Picker 1', async ({ page }) => {
+  await page.getByText('Forms').click()
+  await page.getByText('Datepicker').click()
+
+  const calendarInputField = page.getByPlaceholder('Form Picker')
+  await calendarInputField.click()
+
+  await page.locator('.day-cell:not(.bounding-month)').getByText('2', { exact: true }).click()
+  await expect(calendarInputField).toHaveValue('Sep 2, 2026')
+})
+
+test('Date Picker 2', async ({ page }) => {
+  await page.getByText('Forms').click()
+  await page.getByText('Datepicker').click()
+
+  const calendarInputField = page.getByPlaceholder('Form Picker')
+  await calendarInputField.click()
+  const date = new Date();
+  date.setDate(date.getDate() + 100)
+
+  const expectedDay = date.getDate().toString()
+  const expectedMonth = date.toLocaleString('En-US', { month: 'short' })
+  const expectedMonthLong = date.toLocaleString('En-US', { month: 'long' })
+  const expectedYear = date.getFullYear()
+  const expectedDate = `${expectedMonth} ${expectedDay}, ${expectedYear}`
+
+  let currentMonthAndYear = await page.locator('nb-calendar-view-mode').textContent()
+  const expectedMonthAndYear = `${expectedMonthLong} ${expectedYear}`
+
+  while (!currentMonthAndYear?.includes(expectedMonthAndYear)) {
+    await page.locator('.next-month').click()
+    currentMonthAndYear = await page.locator('nb-calendar-view-mode').textContent()
+  }
+  await page.locator('.day-cell:not(.bounding-month)').getByText(expectedDay, { exact: true }).click()
+  await expect(calendarInputField).toHaveValue(expectedDate)
+})
+type Box = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+test('sliders', async ({ page }) => {
+
+  const tempGauge = page.locator('[tabtitle="Temperature"] ngx-temperature-dragger circle')
+  await tempGauge.evaluate(element => {
+    element.setAttribute('cx', '232.630')
+    element.setAttribute('cy', '232.630')
+  })
+  await tempGauge.click()
+
+  const tempBox = page.locator('[tabtitle="Temperature"] ngx-temperature-dragger')
+  await tempBox.scrollIntoViewIfNeeded()
+
+  const box: Box = (await tempBox.boundingBox())!
+  const x = box?.x + box?.width / 2
+  const y = box?.y + box?.height / 2
+
+  await page.mouse.move(x, y)
+  await page.mouse.down()
+  await page.mouse.move(x + 100, y)
+  await page.mouse.move(x + 100, y + 100)
+  await page.mouse.up()
+  await expect(tempBox).toContainText('30')
+})
+
+test('IFrames', async ({ page }) => {
+  await page.getByText('Modal & Overlays').click()
+  await page.getByText('Dialog').click()
+ 
+  const frameLocator = page.frameLocator('[data-cy="esc-close-iframe"]')
+  await frameLocator.getByRole('button', {name: 'Open Dialog with esc close'}).click()
+})
+
+test('Drag and Drop', async({page})=> {
+  await page.getByText('Extra Components').click()
+  await page.getByText('Drag & Drop').click()
+  
+
+  await page.getByText(' Clean my room ').dragTo(page.locator('#drop-list'))
+
+  await page.getByText(' Get groceries').hover()
+  await page.mouse.down()
+
+  await page.locator('#drop-list').hover()
+
+  await page.mouse.up()
+
+})
