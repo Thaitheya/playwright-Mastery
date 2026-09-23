@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-
+import { step } from '../helpers/test=step-decorator'
 
 
 export class FormLayoutPage {
@@ -9,6 +9,7 @@ export class FormLayoutPage {
         this.page = page
     }
 
+    @step
     async submitUsingTheGridForm(email: string, password: string, optionText: string) {
         const usingTheGridForm = this.page.locator('nb-card', { hasText: 'Using the Grid' })
         await usingTheGridForm.getByRole('textbox', { name: "Email" }).fill(email)
@@ -23,6 +24,7 @@ export class FormLayoutPage {
      * @param rememberMeCheckbox boolean Pass `true` to select Remember Me checkbox
      */
 
+    @step
     async submitInlineForm(fullName: string, email: string, rememberMeCheckbox: boolean) {
         const inlineForm = this.page.locator('nb-card', {hasText: 'Inline form'})
         await inlineForm.getByRole('textbox', {name:'Jane Doe'}).fill(fullName)

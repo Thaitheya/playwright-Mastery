@@ -1,7 +1,7 @@
 import { DatePickerPage } from '../page-objects/datepicker-page';
 import { FormLayoutPage } from './../page-objects/form-layouts-page';
 import { NavigationPage } from './../page-objects/navigation-page';
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
 
