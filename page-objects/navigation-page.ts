@@ -1,9 +1,9 @@
 
 import { Locator, Page } from '@playwright/test'
 import { step } from '../helpers/test=step-decorator'
-export class NavigationPage {
+import { HelperBase } from './helper-base';
+export class NavigationPage extends HelperBase {
 
-    private readonly page: Page
     readonly formLayuoutsMenu: Locator
     readonly datePickerMenu: Locator
     readonly toasterMenu: Locator
@@ -12,7 +12,7 @@ export class NavigationPage {
 
 
     constructor(page: Page) {
-        this.page = page
+        super(page)
         this.formLayuoutsMenu = page.getByText('Form Layouts')
         this.datePickerMenu = page.getByText('Datepicker')
         this.smartTableMenu = page.getByText('Smart Table')
@@ -24,6 +24,8 @@ export class NavigationPage {
     async formLayoutsPage() {
         await this.selectGroupMenuItem('Forms')
         await this.formLayuoutsMenu.click()
+        const toastMessage = await this.getToastrMessage()
+        console.log(toastMessage)
     }
     @step
     async datePickerPage() {

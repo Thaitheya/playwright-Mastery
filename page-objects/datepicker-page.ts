@@ -1,13 +1,12 @@
 import { Page, expect } from "@playwright/test";
 import { step } from "../helpers/test=step-decorator";
+import { HelperBase } from "./helper-base";
 
-export class DatePickerPage {
-    private readonly page: Page
-
+export class DatePickerPage extends HelperBase {
     constructor(page: Page) {
-        this.page = page
-    }
+        super(page)
 
+    }
     @step
     async selectCommonDatepickerDateFromToday(daysFromToday: number) {
         const calendarInputField = this.page.getByPlaceholder('Form Picker')
