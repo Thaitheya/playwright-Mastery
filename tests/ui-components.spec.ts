@@ -6,14 +6,17 @@ test.beforeEach(async ({ page }) => {
   await page.goto("https://playground.bondaracademy.com/")
 });
 
-test.describe("Form layouts Page", () => {
-
+test.describe.only("Form layouts Page", () => {
+  test.describe.configure({retries: 2})
   test.beforeEach(async ({ page }) => {
     await page.getByRole('link', { name: 'Forms' }).click();
     await page.getByRole('link', { name: 'Form Layouts' }).click();
   })
 
-  test('Input Fields', async ({ page }) => {
+  test('Input Fields', async ({ page },testInfo) => {
+    if(testInfo.retry) {
+
+    }
     const usingTheGridEmailInput = page.locator('nb-card', { hasText: "Using the Grid" })
       .getByRole('textbox', { name: "Email" })
     await usingTheGridEmailInput.fill("thaitheyasudanpk@gmail.com")
