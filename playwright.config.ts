@@ -7,7 +7,7 @@ dotenv.config({ path: path.resolve(__dirname, process.env.TEST_ENV ? `.env.${pro
 
 
 export default defineConfig({
-  globalTimeout: 30000,
+  globalTimeout: 60000,
   testDir: './tests',
   fullyParallel: true, 
   forbidOnly: !!process.env.CI,
@@ -17,9 +17,16 @@ export default defineConfig({
   use: {
     baseURL: process.env.URL,
     trace: 'on-first-retry',
-    video: 'off'
+    video: 'off',
+
   },
   projects: [
+    {
+       name: 'mobile-test',
+       use: {
+         ...devices['iPhone 17 Pro Max']
+       }
+    },
     {
       name: 'chromium',
       timeout:20000,

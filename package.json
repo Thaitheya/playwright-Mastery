@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "po-test-chromium": "npx playwright test test-with-page-objects.spec.ts --project=chromium --headed",
+    "po-test-chromium": "npx playwright test --project=chromium --grep \"@radio^|@fields\" --headed",
     "po-test-chromium:qa": "cross-env TEST_ENV=qa npx playwright test test-with-page-objects.spec.ts --project=chromium --headed"
   },
   "keywords": [],

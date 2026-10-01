@@ -7,16 +7,12 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe.only("Form layouts Page", () => {
-  test.describe.configure({retries: 2})
   test.beforeEach(async ({ page }) => {
     await page.getByRole('link', { name: 'Forms' }).click();
     await page.getByRole('link', { name: 'Form Layouts' }).click();
   })
 
-  test('Input Fields', async ({ page },testInfo) => {
-    if(testInfo.retry) {
-
-    }
+  test('Input Fields',{tag: ['@smoke','@fields']}, async ({ page }) => {
     const usingTheGridEmailInput = page.locator('nb-card', { hasText: "Using the Grid" })
       .getByRole('textbox', { name: "Email" })
     await usingTheGridEmailInput.fill("thaitheyasudanpk@gmail.com")
@@ -27,7 +23,7 @@ test.describe.only("Form layouts Page", () => {
     await expect(usingTheGridEmailInput).toHaveValue(/@gmail.com/)
   })
 
-  test('Radio Buttons', async ({ page }) => {
+  test('Radio Buttons', {tag: ['@smoke','@radio']}, async ({ page }) => {
 
     const usingTheGridForm = page.locator('nb-card', { hasText: "Using the Grid" })
 
