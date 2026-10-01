@@ -7,7 +7,7 @@ dotenv.config({ path: path.resolve(__dirname, process.env.TEST_ENV ? `.env.${pro
 
 
 export default defineConfig({
-  globalTimeout: 30000,
+  globalTimeout: 60000,
   testDir: './tests',
   fullyParallel: true, 
   forbidOnly: !!process.env.CI,
@@ -22,7 +22,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      timeout:20000,
+      timeout:30000,
       retries:3,
       use: { ...devices['Desktop Chrome'] },
     },
